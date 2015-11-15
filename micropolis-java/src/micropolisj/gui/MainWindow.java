@@ -600,6 +600,17 @@ public class MainWindow extends JFrame
 			}}));
 		optionsMenu.add(menuItem);
 
+		keepHeaderMenuItem = new JCheckBoxMenuItem(strings.getString("menu.options.keep_header"));
+		setupKeys(keepHeaderMenuItem, "menu.options.keep_header");
+		keepHeaderMenuItem.addActionListener(wrapActionListener(
+			new ActionListener() {
+			public void actionPerformed(ActionEvent ev)
+			{
+				onKeepHeaderClicked();
+			}
+			}));
+		optionsMenu.add(keepHeaderMenuItem);
+
 		JMenu disastersMenu = new JMenu(strings.getString("menu.disasters"));
 		setupKeys(disastersMenu, "menu.disasters");
 		menuBar.add(disastersMenu);
@@ -809,6 +820,7 @@ public class MainWindow extends JFrame
 	JMenuItem autoGoMenuItem;
 	JMenuItem disastersMenuItem;
 	JMenuItem soundsMenuItem;
+	JMenuItem keepHeaderMenuItem;
 	Map<Speed,JMenuItem> priorityMenuItems;
 	Map<Integer,JMenuItem> difficultyMenuItems;
 
@@ -843,6 +855,12 @@ public class MainWindow extends JFrame
 		Preferences prefs = Preferences.userNodeForPackage(MainWindow.class);
 		prefs.putBoolean(SOUNDS_PREF, doSounds);
 		reloadOptions();
+	}
+
+	private void onKeepHeaderClicked()
+	{
+		dirty1 = true;
+		getEngine().toggleKeepHeader();
 	}
 
 	void makeClean()
@@ -1622,6 +1640,7 @@ public class MainWindow extends JFrame
 		autoGoMenuItem.setSelected(getEngine().autoGo);
 		disastersMenuItem.setSelected(!getEngine().noDisasters);
 		soundsMenuItem.setSelected(doSounds);
+		keepHeaderMenuItem.setSelected(getEngine().keepHeader);
 		for (Speed spd : priorityMenuItems.keySet())
 		{
 			priorityMenuItems.get(spd).setSelected(getEngine().simSpeed == spd);
